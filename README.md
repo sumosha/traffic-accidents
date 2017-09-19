@@ -7,7 +7,7 @@ This is a simple Spark application to read in data and output to a query-able st
 * docker
 
 ### How to Create and Run the Docker image
-* Execute the launch.sh script at the root of this project. This script runs an sbt build and a subsequent docker build. It tags the image as sumosha/traffic_accidents:latest
+* Execute the build.sh script at the root of this project. This script runs an sbt build and a subsequent docker build. It tags the image as sumosha/traffic_accidents:latest
 * `docker run -it sumosha/traffic_accidents:latest `
   * This will launch a spark-shell session, where we can create tables, query, and aggegrate data directly in here. See below...
   
