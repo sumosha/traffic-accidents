@@ -33,10 +33,11 @@ spark.sql("select * from accidents").show()
 These can be located in the queries folder.
 
 ### Thoughts for a real product
-* In reality, this problem can be abstracted out to a more generic input --> output pattern, perhaps even with custom functions to perform specific or generic transformations. This toy app can be made more configurable for a wide variety of uses.
 * For demonstration only, the docker image contains the output of the job run on the local disk. In the real world, I would output the data to an S3 or HDFS store somewhere.
   * This can easily be changed to store to these systems using the URI pattern of s3a:// or hdfs://
-  * I would use Hive or AWS Athena to query the output.
+  * Parquet format selected because of its wide support and also its faster query-ability (write once, read forever).
+  * I would use Hive or AWS Athena to query the output. I would continue to use Spark for more complex analytical queries.
+* In reality, this problem can be abstracted out to a more generic input --> output pattern, perhaps even with custom functions to perform specific or generic transformations. This toy app can be made more configurable for a wide variety of uses.
 * This should run on a Spark cluster when dealing with larger amounts of data. How that is set up and launched depends on the existing infrastructure being used.
 
 
