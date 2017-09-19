@@ -1,0 +1,14 @@
+- Are there seasonal trends to the different types of events?
+ spark.sql("select month(FIRST_OCCURRENCE_DATE) as month_occurred, count(incident_id) as num_incidents from accidents group by month(FIRST_OCCURRENCE_DATE) order by month_occurred").show()
+ I would probably also write some custom bucketer to group incidents in seasons as well, and perhaps persist that as part of the ETL load if it is used frequently for analysis.
+
+- Which types of events are more common in which geographic areas (defined by coordinates or neighborhood)?
+spark.sql("select offense_type_id, neighborhood_id, count(incident_id) as num_incidents from accidents group by offense_type_id, neighborhood_id order by num_incidents desc").show()
+
+- How long are typical response/resolution times? Do these differ by type of event, geography, or other factors?
+
+The below is conceptually how I would start to answer this, however there is some work that needs to happen to handle the date columns being represented as Strings instead of timestamps. I would convert these as part of the ETL load.
+spark.sql("select offense_type_id, neighborhood_id, (date(FIRST_OCCURRENCE_DATE) - date(LAST_OCCURRENCE_DATE)) as responseTime from accidents").show()
+
+- What correlations are there between the two data sets?
+I would probably investigate what types of service requests could be associated with a higher rate of accidents or even hit-and-run accidents, if any.
