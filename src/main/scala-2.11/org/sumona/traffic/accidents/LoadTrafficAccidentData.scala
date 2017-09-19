@@ -25,22 +25,19 @@ object LoadTrafficAccidentData {
     val raw_df = sparkSession.read.option("header", "true").csv(config.inputPath)
     val cleaned = cleanColumnNames(raw_df)
     val toWrite = {
-      if (config.filterDate.equals("from-beginning")) {
-        cleaned
-      }
-      else {
-        val filtered = cleaned.where(s"${convertSpaceToUnderscore(config.filterColumnName)} >= '${config.filterDate}'")
-        filtered.show(false)
-        filtered
+      config.filterDate match {
+        case "from-beginning" =>  cleaned
+        case _ => cleaned.where(s"${convertSpaceToUnderscore(config.filterColumnName)} >= '${config.filterDate}'")
       }
     }
 
-    sparkSession
-    toWrite.write.parquet("hdfs://localhost:8000/somestuff")
+    val outputFileName = FileName(config.inputPath).extractNameFromPath.csvToParquetExtension
+    toWrite.write.parquet(s"/tmp/output/${outputFileName.name}")
   }
 
   def convertSpaceToUnderscore(name: String) = name.replaceAll("\\s+", "_")
 
+  //TODO: this can be moved to a utility and tested independently
   def cleanColumnNames(df: DataFrame): DataFrame = {
     var cleaned = df
     df.columns.map(colName => {
