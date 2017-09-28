@@ -7,9 +7,6 @@ import scopt.OptionParser
 import scala.collection.immutable.Iterable
 import scala.util.{Failure, Success, Try}
 
-/**
-  * Created by Sumona on 9/16/2017.
-  */
 object Config {
 
   val parser = new OptionParser[Config]("generic-data-loader") {

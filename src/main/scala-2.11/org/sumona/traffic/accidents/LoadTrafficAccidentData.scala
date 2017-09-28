@@ -1,17 +1,8 @@
 package org.sumona.traffic.accidents
 
-import java.time
-import java.time.LocalDate
-import java.time.format.DateTimeParseException
-import java.util.logging.LogManager
+import org.apache.spark.sql.{DataFrame, SaveMode, SparkSession}
 
-import org.apache.spark.sql.{DataFrame, SparkSession}
 
-import scala.util.{Failure, Success, Try}
-
-/**
-  * Created by Sumona on 9/16/2017.
-  */
 object LoadTrafficAccidentData {
 
   def main(args: Array[String]): Unit = {
@@ -32,7 +23,8 @@ object LoadTrafficAccidentData {
     }
 
     val outputFileName = FileName(config.inputPath).extractNameFromPath.csvToParquetExtension
-    toWrite.write.parquet(s"/tmp/output/${outputFileName.name}")
+
+    toWrite.write.mode(SaveMode.Append).parquet(s"/tmp/output/${outputFileName.name}")
   }
 
   def convertSpaceToUnderscore(name: String) = name.replaceAll("\\s+", "_")
